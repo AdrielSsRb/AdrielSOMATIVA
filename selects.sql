@@ -38,6 +38,7 @@ inner join eventos as ev on lc.id = ev.localFk
 where st.feita = 'sim' and fk_progresso = '4' 
 group by lc.nome;
 
+select * from usuarios;
 /* Crie uma consulta que mostre os usuários e quantas tarefas possuem atribuídas (independente do status)*/
 
 select us.nome, count(tf.id) total_tarefas  from responsa as rp
@@ -54,7 +55,10 @@ inner join status as st on st.id = tf.fk_status
 where st.feita = 'sim' and fk_progresso = '4' 
 group by us.nome;
 
-/*Crie uma consulta que mostre a média por mês de quantas tarefas são criadas por local*/
+/*Crie uma consulta que mostre a média por mês de quantas tarefas são criadas por local */
 
-select * from tarefas as tf
-inner join locais as lc on lc.id = tf.fk_local;
+
+select avg(mes) as mes, local from (
+select count(month(tf.data_abertura)) as mes , year(tf.data_abertura) as ano, tf.fk_local as local from tarefas as tf
+inner join locais as lc on lc.id = tf.fk_local 
+group by local, ano ) a  group by local;
